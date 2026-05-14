@@ -11,8 +11,7 @@ public class JsonController {
 
     @ResponseBody
     @GetMapping("/json")
-    public Map<String, Object> user() {
-
+    public Map<String, Object> json() {
         Map<String, Object> data = new LinkedHashMap<>();
 
         data.put("age", 24);
