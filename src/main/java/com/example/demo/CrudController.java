@@ -52,4 +52,18 @@ public class CrudController {
 
         return ResponseEntity.ok(article);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Article> putArticle(@PathVariable int id, @RequestParam String title, @RequestParam String content) {
+        Article article = articleMap.get(id);
+
+        if (article == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Article putArticle = new Article(id, title, content);
+        articleMap.put(id, putArticle);
+
+        return ResponseEntity.ok(putArticle);
+    }
 }
