@@ -9,29 +9,7 @@ import java.util.HashMap;
 @RequestMapping("/article")
 public class CrudController {
 
-    private class Article {
-        private int id;
-        private String title;
-        private String content;
-
-        public Article(int id, String title, String content) {
-            this.id = id;
-            this.title = title;
-            this.content = content;
-        }
-
-        public int getId() {
-            return id;
-        }
-        public String getTitle() {
-            return title;
-        }
-        public String getContent() {
-            return content;
-        }
-    }
-
-    private Map<Integer, Article> articleMap = new HashMap<>();
+    private final Map<Integer, Article> articleMap = new HashMap<>();
     private int lastId = 0;
 
     @PostMapping
@@ -61,9 +39,22 @@ public class CrudController {
             return ResponseEntity.notFound().build();
         }
 
-        Article putArticle = new Article(id, title, content);
-        articleMap.put(id, putArticle);
+        article = new Article(id, title, content);
+        articleMap.put(id, article);
 
-        return ResponseEntity.ok(putArticle);
+        return ResponseEntity.ok(article);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Article> deleteArticle(@PathVariable int id) {
+        Article article = articleMap.get(id);
+
+        if (article == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        articleMap.remove(id);
+
+        return ResponseEntity.ok(article);
     }
 }
