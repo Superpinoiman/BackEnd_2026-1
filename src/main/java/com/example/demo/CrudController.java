@@ -13,8 +13,8 @@ public class CrudController {
     private int lastId = 0;
 
     @PostMapping
-    public ResponseEntity<Article> postArticle(@RequestParam String title, @RequestParam String content) {
-        Article article = new Article(++lastId, title, content);
+    public ResponseEntity<Article> postArticle(@RequestBody ArticleRequest request) {
+        Article article = new Article(++lastId, request.getTitle(), request.getContent());
         articleMap.put(article.getId(), article);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(article);
@@ -32,14 +32,14 @@ public class CrudController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Article> putArticle(@PathVariable int id, @RequestParam String title, @RequestParam String content) {
+    public ResponseEntity<Article> putArticle(@PathVariable int id, @RequestBody ArticleRequest request) {
         Article article = articleMap.get(id);
 
         if (article == null) {
             return ResponseEntity.notFound().build();
         }
 
-        article = new Article(id, title, content);
+        article = new Article(id, request.getTitle(), request.getContent());
         articleMap.put(id, article);
 
         return ResponseEntity.ok(article);
