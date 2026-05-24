@@ -9,7 +9,7 @@ public class Article {
     private final String title;
     private final String content;
     private final LocalDateTime createdTime;
-    private final LocalDateTime updatedTime;
+    private LocalDateTime updatedTime;
 
     public Article(int id, int authorId, int boardId, String title, String content, LocalDateTime createdTime, LocalDateTime updatedTime) {
         this.id = id;

@@ -9,7 +9,6 @@ import java.util.HashMap;
 @RequestMapping("/article")
 public class CrudController {
     private final Map<Integer, Article> articleMap = new HashMap<>();
-    private int lastId = 0;
 
     @PostMapping
     public ResponseEntity<Article> postArticle(@RequestBody ArticleRequest request) {
