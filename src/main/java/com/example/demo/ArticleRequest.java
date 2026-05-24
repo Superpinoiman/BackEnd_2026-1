@@ -1,7 +1,6 @@
 package com.example.demo;
 
 public class ArticleRequest {
-
     private int authorId;
     private int boardId;
     private String title;

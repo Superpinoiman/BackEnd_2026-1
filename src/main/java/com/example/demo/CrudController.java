@@ -8,7 +8,6 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/article")
 public class CrudController {
-
     private final Map<Integer, Article> articleMap = new HashMap<>();
     private int lastId = 0;
 
