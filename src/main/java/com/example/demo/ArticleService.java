@@ -3,6 +3,7 @@ package com.example.demo;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -84,5 +85,27 @@ public class ArticleService {
 
         articleRepository.delete(id);
         return article;
+    }
+
+    public List<ViewResponse> getPosts() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        return articleRepository.findAll().stream()
+                .map(article -> {
+                    Member member = memberRepository.findById(article.getAuthorId()).orElse(null);
+                    Board board = boardRepository.findById(article.getBoardId()).orElse(null);
+
+                    String authorName = member != null ? member.getName() : "유령 회원";
+                    String boardName = board != null ? board.getName() : "유령 게시판";
+
+                    return new ViewResponse(
+                            boardName,
+                            article.getTitle(),
+                            authorName,
+                            article.getCreatedTime().format(formatter),
+                            article.getContent()
+                    );
+                })
+                .toList();
     }
 }

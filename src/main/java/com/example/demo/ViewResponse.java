@@ -15,8 +15,8 @@ public class ViewResponse {
         this.boardName = boardName;
         this.title = title;
         this.authorName = authorName;
-        this.createdTime = createdTime;
         this.content = content;
+        this.createdTime = createdTime;
     }
 
     public String getBoardName() {

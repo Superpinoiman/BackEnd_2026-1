@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 목록</title>
+    <style>
+        .board-header {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 24px;
+        }
+
+        .post {
+            border: 1px solid #ccc;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .content {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<div th:if="${posts != null and !posts.isEmpty()}">
+    <div class="board-header" th:text="${posts[0].boardName}"></div>
+
+    <div th:each="post : ${posts}" class="post">
+        <div class="title" th:text="${post.title}"></div>
+        <div class="meta">
+            <span th:text="${post.authorName}"></span>
+            <span> | </span>
+            <span th:text="${post.createdTime}"></span>
+        </div>
+        <div class="content" th:text="${post.content}"></div>
+    </div>
+</div>
+
+<div th:if="${posts == null or posts.isEmpty()}">
+    게시글이 없습니다.
+</div>
+
+</body>
+</html>
+

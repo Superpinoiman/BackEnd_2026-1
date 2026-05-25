@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 
 import java.util.List;
 
@@ -62,5 +63,11 @@ public class CrudController {
     @ResponseBody
     public List<Article> getArticles() {
         return articleService.getAllArticles();
+    }
+
+    @GetMapping("/posts")
+    public String getPosts(Model model) {
+        model.addAttribute("posts", articleService.getPosts());
+        return "posts";
     }
 }
