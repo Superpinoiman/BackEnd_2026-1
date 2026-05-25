@@ -1,14 +1,9 @@
 package com.example.demo;
 
 public class ArticleRequest {
-    private int boardId;
     private int authorId;
     private String title;
     private String content;
-
-    public int getBoardId() {
-        return boardId;
-    }
 
     public int getAuthorId() {
         return authorId;
@@ -20,10 +15,6 @@ public class ArticleRequest {
 
     public String getContent() {
         return content;
-    }
-
-    public void setBoardId(int boardId) {
-        this.boardId = boardId;
     }
 
     public void setAuthorId(int authorId) {
