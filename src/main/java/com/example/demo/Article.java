@@ -3,22 +3,32 @@ package com.example.demo;
 import java.time.LocalDateTime;
 
 public class Article {
+    private final int boardId;
     private final int id;
     private final int authorId;
-    private final int boardId;
     private final String title;
     private final String content;
     private final LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
+    private final LocalDateTime updatedTime;
 
-    public Article(int id, int authorId, int boardId, String title, String content, LocalDateTime createdTime, LocalDateTime updatedTime) {
+    public Article(int boardId,
+                   int id,
+                   int authorId,
+                   String title,
+                   String content,
+                   LocalDateTime createdTime,
+                   LocalDateTime updatedTime) {
+        this.boardId = boardId;
         this.id = id;
         this.authorId = authorId;
-        this.boardId = boardId;
         this.title = title;
         this.content = content;
         this.createdTime = createdTime;
         this.updatedTime = updatedTime;
+    }
+
+    public int getBoardId() {
+        return boardId;
     }
 
     public int getId() {
@@ -27,10 +37,6 @@ public class Article {
 
     public int getAuthorId() {
         return authorId;
-    }
-
-    public int getBoardId() {
-        return boardId;
     }
 
     public String getTitle() {

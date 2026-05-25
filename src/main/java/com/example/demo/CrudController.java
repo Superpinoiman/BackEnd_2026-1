@@ -1,26 +1,31 @@
 package com.example.demo;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.*;
-import java.util.Map;
-import java.util.HashMap;
 
-@RestController
-@RequestMapping("/article")
+import java.util.List;
+
+@Controller
 public class CrudController {
-    private final Map<Integer, Article> articleMap = new HashMap<>();
+    private final ArticleService articleService;
 
-    @PostMapping
+    public CrudController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
+
+    @PostMapping("/article")
+    @ResponseBody
     public ResponseEntity<Article> postArticle(@RequestBody ArticleRequest request) {
-        Article article = new Article(++lastId, request.getTitle(), request.getContent());
-        articleMap.put(article.getId(), article);
-
+        Article article = articleService.createArticle(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(article);
     }
 
-    @GetMapping("/{id}")
-    public  ResponseEntity<Article> getArticle(@PathVariable int id) {
-        Article article = articleMap.get(id);
+    @GetMapping("/article/{id}")
+    @ResponseBody
+    public ResponseEntity<Article> getArticle(@PathVariable int id) {
+        Article article = articleService.getArticle(id);
 
         if (article == null) {
             return ResponseEntity.notFound().build();
@@ -29,30 +34,33 @@ public class CrudController {
         return ResponseEntity.ok(article);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/article/{id}")
+    @ResponseBody
     public ResponseEntity<Article> putArticle(@PathVariable int id, @RequestBody ArticleRequest request) {
-        Article article = articleMap.get(id);
+        Article article = articleService.updateArticle(id, request);
 
         if (article == null) {
             return ResponseEntity.notFound().build();
         }
-
-        article = new Article(id, request.getTitle(), request.getContent());
-        articleMap.put(id, article);
 
         return ResponseEntity.ok(article);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/article/{id}")
+    @ResponseBody
     public ResponseEntity<Article> deleteArticle(@PathVariable int id) {
-        Article article = articleMap.get(id);
+        Article article = articleService.deleteArticle(id);
 
         if (article == null) {
             return ResponseEntity.notFound().build();
         }
 
-        articleMap.remove(id);
-
         return ResponseEntity.ok(article);
+    }
+
+    @GetMapping("/articles")
+    @ResponseBody
+    public List<Article> getArticles() {
+        return articleService.getAllArticles();
     }
 }

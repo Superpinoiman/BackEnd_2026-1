@@ -1,13 +1,17 @@
 package com.example.demo;
 
-public class ResponseView {
+public class ViewResponse {
     private final String boardName;
     private final String title;
     private final String authorName;
     private final String createdTime;
     private final String content;
 
-    public ResponseView(String boardName, String title, String authorName, String createdTime, String content) {
+    public ViewResponse(String boardName,
+                        String title,
+                        String authorName,
+                        String createdTime,
+                        String content) {
         this.boardName = boardName;
         this.title = title;
         this.authorName = authorName;
