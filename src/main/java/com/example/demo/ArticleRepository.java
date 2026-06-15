@@ -9,13 +9,13 @@ public class ArticleRepository {
     private final Map<Integer, Article> articleMap = new HashMap<>();
     private int lastId = 0;
 
+    public int nextId() {
+        return ++lastId;
+    }
+
     public Article save(Article article) {
         articleMap.put(article.getId(), article);
         return article;
-    }
-
-    public int nextId() {
-        return ++lastId;
     }
 
     public Optional<Article> findById(int id) {
@@ -26,8 +26,13 @@ public class ArticleRepository {
         return new ArrayList<>(articleMap.values());
     }
 
+    public List<Article> findByBoardId(int boardId) {
+        return articleMap.values().stream()
+                .filter(article -> article.getBoardId() == boardId)
+                .toList();
+    }
+
     public void delete(int id) {
         articleMap.remove(id);
     }
 }
-

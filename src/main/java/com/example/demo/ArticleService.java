@@ -22,14 +22,9 @@ public class ArticleService {
 
     public Article createArticle(ArticleRequest request) {
         Member member = memberRepository.findById(request.getAuthorId()).orElse(null);
+        Board board = boardRepository.findById(request.getBoardId()).orElse(null);
 
-        if (member == null) {
-            return null;
-        }
-
-        Board board = boardRepository.getDefaultBoard();
-
-        if (board == null) {
+        if (member == null || board == null) {
             return null;
         }
 
@@ -56,6 +51,10 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
+    public List<Article> getArticlesByBoardId(int boardId) {
+        return articleRepository.findByBoardId(boardId);
+    }
+
     public Article updateArticle(int id, ArticleRequest request) {
         Article oldArticle = articleRepository.findById(id).orElse(null);
 
@@ -63,10 +62,17 @@ public class ArticleService {
             return null;
         }
 
+        Member member = memberRepository.findById(request.getAuthorId()).orElse(null);
+        Board board = boardRepository.findById(request.getBoardId()).orElse(null);
+
+        if (member == null || board == null) {
+            return null;
+        }
+
         Article updatedArticle = new Article(
-                oldArticle.getBoardId(),
+                board.getId(),
                 id,
-                oldArticle.getAuthorId(),
+                member.getId(),
                 request.getTitle(),
                 request.getContent(),
                 oldArticle.getCreatedTime(),
