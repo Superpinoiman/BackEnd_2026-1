@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,12 +22,11 @@ public class ArticleService {
     }
 
     public Article createArticle(ArticleRequest request) {
-        Member member = memberRepository.findById(request.getAuthorId()).orElse(null);
-        Board board = boardRepository.findById(request.getBoardId()).orElse(null);
+        Member member = memberRepository.findById(request.getAuthorId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
-        if (member == null || board == null) {
-            return null;
-        }
+        Board board = boardRepository.findById(request.getBoardId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
         int id = articleRepository.nextId();
 
@@ -44,7 +44,8 @@ public class ArticleService {
     }
 
     public Article getArticle(int id) {
-        return articleRepository.findById(id).orElse(null);
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
     }
 
     public List<Article> getAllArticles() {
@@ -52,26 +53,25 @@ public class ArticleService {
     }
 
     public List<Article> getArticlesByBoardId(int boardId) {
+        boardRepository.findById(boardId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
+
         return articleRepository.findByBoardId(boardId);
     }
 
     public Article updateArticle(int id, ArticleRequest request) {
-        Article oldArticle = articleRepository.findById(id).orElse(null);
+        Article oldArticle = articleRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
-        if (oldArticle == null) {
-            return null;
-        }
+        Member member = memberRepository.findById(request.getAuthorId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
-        Member member = memberRepository.findById(request.getAuthorId()).orElse(null);
-        Board board = boardRepository.findById(request.getBoardId()).orElse(null);
-
-        if (member == null || board == null) {
-            return null;
-        }
+        Board board = boardRepository.findById(request.getBoardId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
         Article updatedArticle = new Article(
                 board.getId(),
-                id,
+                oldArticle.getId(),
                 member.getId(),
                 request.getTitle(),
                 request.getContent(),
@@ -83,11 +83,8 @@ public class ArticleService {
     }
 
     public Article deleteArticle(int id) {
-        Article article = articleRepository.findById(id).orElse(null);
-
-        if (article == null) {
-            return null;
-        }
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
         articleRepository.delete(id);
         return article;

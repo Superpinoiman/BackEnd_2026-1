@@ -35,4 +35,9 @@ public class MemberRepository {
     public void delete(int id) {
         memberMap.remove(id);
     }
+
+    public boolean existsByEmailAndIdNot(String email, int id) {
+        return memberMap.values().stream()
+                .anyMatch(member -> member.getEmail().equals(email) && member.getId() != id);
+    }
 }

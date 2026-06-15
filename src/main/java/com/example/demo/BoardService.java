@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -7,9 +8,11 @@ import java.util.List;
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final ArticleRepository articleRepository;
 
-    public BoardService(BoardRepository boardRepository) {
+    public BoardService(BoardRepository boardRepository, ArticleRepository articleRepository) {
         this.boardRepository = boardRepository;
+        this.articleRepository = articleRepository;
     }
 
     public List<Board> getAllBoards() {
@@ -17,7 +20,8 @@ public class BoardService {
     }
 
     public Board getBoard(int id) {
-        return boardRepository.findById(id).orElse(null);
+        return boardRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
     }
 
     public Board createBoard(BoardRequest request) {
@@ -25,16 +29,12 @@ public class BoardService {
                 boardRepository.nextId(),
                 request.getName()
         );
-
         return boardRepository.save(board);
     }
 
     public Board updateBoard(int id, BoardRequest request) {
-        Board oldBoard = boardRepository.findById(id).orElse(null);
-
-        if (oldBoard == null) {
-            return null;
-        }
+        Board oldBoard = boardRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
         Board updatedBoard = new Board(
                 oldBoard.getId(),
@@ -45,10 +45,11 @@ public class BoardService {
     }
 
     public Board deleteBoard(int id) {
-        Board board = boardRepository.findById(id).orElse(null);
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
-        if (board == null) {
-            return null;
+        if (articleRepository.existsByBoardId(id)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST);
         }
 
         boardRepository.delete(id);

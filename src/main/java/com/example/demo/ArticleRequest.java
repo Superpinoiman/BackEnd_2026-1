@@ -1,16 +1,27 @@
 package com.example.demo;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class ArticleRequest {
-    private int authorId;
-    private int boardId;
+
+    @NotNull
+    private Integer authorId;
+
+    @NotNull
+    private Integer boardId;
+
+    @NotBlank
     private String title;
+
+    @NotBlank
     private String content;
 
-    public int getAuthorId() {
+    public Integer getAuthorId() {
         return authorId;
     }
 
-    public int getBoardId() {
+    public Integer getBoardId() {
         return boardId;
     }
 
@@ -22,11 +33,11 @@ public class ArticleRequest {
         return content;
     }
 
-    public void setAuthorId(int authorId) {
+    public void setAuthorId(Integer authorId) {
         this.authorId = authorId;
     }
 
-    public void setBoardId(int boardId) {
+    public void setBoardId(Integer boardId) {
         this.boardId = boardId;
     }
 

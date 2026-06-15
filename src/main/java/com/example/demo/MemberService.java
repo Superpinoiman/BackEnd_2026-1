@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -7,9 +8,11 @@ import java.util.List;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final ArticleRepository articleRepository;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, ArticleRepository articleRepository) {
         this.memberRepository = memberRepository;
+        this.articleRepository = articleRepository;
     }
 
     public List<Member> getAllMembers() {
@@ -17,7 +20,8 @@ public class MemberService {
     }
 
     public Member getMember(int id) {
-        return memberRepository.findById(id).orElse(null);
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
     }
 
     public Member createMember(MemberRequest request) {
@@ -27,15 +31,15 @@ public class MemberService {
                 request.getEmail(),
                 request.getPassword()
         );
-
         return memberRepository.save(member);
     }
 
     public Member updateMember(int id, MemberRequest request) {
-        Member oldMember = memberRepository.findById(id).orElse(null);
+        Member oldMember = memberRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
-        if (oldMember == null) {
-            return null;
+        if (memberRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
+            throw new ApiException(HttpStatus.CONFLICT);
         }
 
         Member updatedMember = new Member(
@@ -49,10 +53,11 @@ public class MemberService {
     }
 
     public Member deleteMember(int id) {
-        Member member = memberRepository.findById(id).orElse(null);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
-        if (member == null) {
-            return null;
+        if (articleRepository.existsByAuthorId(id)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST);
         }
 
         memberRepository.delete(id);

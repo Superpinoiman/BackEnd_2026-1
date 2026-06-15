@@ -35,4 +35,14 @@ public class ArticleRepository {
     public void delete(int id) {
         articleMap.remove(id);
     }
+
+    public boolean existsByAuthorId(int authorId) {
+        return articleMap.values().stream()
+                .anyMatch(article -> article.getAuthorId() == authorId);
+    }
+
+    public boolean existsByBoardId(int boardId) {
+        return articleMap.values().stream()
+                .anyMatch(article -> article.getBoardId() == boardId);
+    }
 }
