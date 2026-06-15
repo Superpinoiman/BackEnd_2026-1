@@ -9,7 +9,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import java.time.LocalDateTime;
 
 public class LoggingInterceptor implements HandlerInterceptor {
-
     private static final Logger log = LoggerFactory.getLogger(LoggingInterceptor.class);
     private static final String START_TIME = "startTime";
 
