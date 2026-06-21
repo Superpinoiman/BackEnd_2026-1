@@ -11,6 +11,7 @@ import java.util.List;
 
 @Controller
 public class CrudController {
+
     private final ArticleService articleService;
     private final MemberService memberService;
     private final BoardService boardService;
@@ -23,41 +24,41 @@ public class CrudController {
         this.boardService = boardService;
     }
 
-    @PostMapping("/article")
+    @PostMapping("/articles")
     @ResponseBody
-    public ResponseEntity<Article> postArticle(@Valid @RequestBody ArticleRequest request) {
+    public ResponseEntity<Article> postArticle(@Valid @RequestBody ArticleCreateRequest request) {
         Article article = articleService.createArticle(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(article);
     }
 
-    @GetMapping("/article/{id}")
+    @GetMapping("/articles/{id}")
     @ResponseBody
-    public ResponseEntity<Article> getArticle(@PathVariable int id) {
+    public ResponseEntity<Article> getArticle(@PathVariable Long id) {
         return ResponseEntity.ok(articleService.getArticle(id));
     }
 
-    @PutMapping("/article/{id}")
+    @PutMapping("/articles/{id}")
     @ResponseBody
-    public ResponseEntity<Article> putArticle(@PathVariable int id,
-                                              @Valid @RequestBody ArticleRequest request) {
+    public ResponseEntity<Article> putArticle(@PathVariable Long id,
+                                              @Valid @RequestBody ArticleUpdateRequest request) {
         return ResponseEntity.ok(articleService.updateArticle(id, request));
     }
 
-    @DeleteMapping("/article/{id}")
+    @DeleteMapping("/articles/{id}")
     @ResponseBody
-    public ResponseEntity<Article> deleteArticle(@PathVariable int id) {
+    public ResponseEntity<Article> deleteArticle(@PathVariable Long id) {
         return ResponseEntity.ok(articleService.deleteArticle(id));
     }
 
     @GetMapping("/articles")
     @ResponseBody
-    public List<Article> getArticles(@RequestParam int boardId) {
-        return articleService.getArticlesByBoardId(boardId);
+    public ResponseEntity<List<Article>> getArticles(@RequestParam Long boardId) {
+        return ResponseEntity.ok(articleService.getArticlesByBoardId(boardId));
     }
 
     @GetMapping("/posts")
-    public String getPosts(Model model) {
-        model.addAttribute("posts", articleService.getPosts());
+    public String getPosts(@RequestParam Long boardId, Model model) {
+        model.addAttribute("posts", articleService.getPosts(boardId));
         return "posts";
     }
 
@@ -69,7 +70,7 @@ public class CrudController {
 
     @GetMapping("/members/{id}")
     @ResponseBody
-    public ResponseEntity<Member> getMember(@PathVariable int id) {
+    public ResponseEntity<Member> getMember(@PathVariable Long id) {
         return ResponseEntity.ok(memberService.getMember(id));
     }
 
@@ -82,14 +83,14 @@ public class CrudController {
 
     @PutMapping("/members/{id}")
     @ResponseBody
-    public ResponseEntity<Member> updateMember(@PathVariable int id,
+    public ResponseEntity<Member> updateMember(@PathVariable Long id,
                                                @Valid @RequestBody MemberRequest request) {
         return ResponseEntity.ok(memberService.updateMember(id, request));
     }
 
     @DeleteMapping("/members/{id}")
     @ResponseBody
-    public ResponseEntity<Member> deleteMember(@PathVariable int id) {
+    public ResponseEntity<Member> deleteMember(@PathVariable Long id) {
         return ResponseEntity.ok(memberService.deleteMember(id));
     }
 
@@ -101,7 +102,7 @@ public class CrudController {
 
     @GetMapping("/boards/{id}")
     @ResponseBody
-    public ResponseEntity<Board> getBoard(@PathVariable int id) {
+    public ResponseEntity<Board> getBoard(@PathVariable Long id) {
         return ResponseEntity.ok(boardService.getBoard(id));
     }
 
@@ -114,14 +115,14 @@ public class CrudController {
 
     @PutMapping("/boards/{id}")
     @ResponseBody
-    public ResponseEntity<Board> updateBoard(@PathVariable int id,
+    public ResponseEntity<Board> updateBoard(@PathVariable Long id,
                                              @Valid @RequestBody BoardRequest request) {
         return ResponseEntity.ok(boardService.updateBoard(id, request));
     }
 
     @DeleteMapping("/boards/{id}")
     @ResponseBody
-    public ResponseEntity<Board> deleteBoard(@PathVariable int id) {
+    public ResponseEntity<Board> deleteBoard(@PathVariable Long id) {
         return ResponseEntity.ok(boardService.deleteBoard(id));
     }
 }

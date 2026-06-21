@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public class MemberRequest {
@@ -7,6 +8,7 @@ public class MemberRequest {
     @NotBlank
     private String name;
 
+    @Email
     @NotBlank
     private String email;
 

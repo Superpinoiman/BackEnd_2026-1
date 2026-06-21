@@ -1,15 +1,14 @@
 package com.example.demo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class ArticleRequest {
+public class ArticleUpdateRequest {
 
     @NotNull
-    private Integer authorId;
-
-    @NotNull
-    private Integer boardId;
+    @JsonProperty("board_id")
+    private Long boardId;
 
     @NotBlank
     private String title;
@@ -17,11 +16,7 @@ public class ArticleRequest {
     @NotBlank
     private String content;
 
-    public Integer getAuthorId() {
-        return authorId;
-    }
-
-    public Integer getBoardId() {
+    public Long getBoardId() {
         return boardId;
     }
 
@@ -33,11 +28,7 @@ public class ArticleRequest {
         return content;
     }
 
-    public void setAuthorId(Integer authorId) {
-        this.authorId = authorId;
-    }
-
-    public void setBoardId(Integer boardId) {
+    public void setBoardId(Long boardId) {
         this.boardId = boardId;
     }
 

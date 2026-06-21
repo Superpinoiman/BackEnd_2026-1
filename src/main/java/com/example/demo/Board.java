@@ -1,20 +1,28 @@
 package com.example.demo;
 
 public class Board {
-    private final int id;
-    private final String name;
 
-    public Board(int id, String name) {
+    private Long id;
+    private String name;
+
+    public Board(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
     public String getName() {
         return name;
     }
-}
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}

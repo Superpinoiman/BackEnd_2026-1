@@ -1,19 +1,20 @@
 package com.example.demo;
 
 public class Member {
-    private final int id;
-    private final String name;
-    private final String email;
-    private final String password;
 
-    public Member(int id, String name, String email, String password) {
+    private Long id;
+    private String name;
+    private String email;
+    private String password;
+
+    public Member(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -27,5 +28,21 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

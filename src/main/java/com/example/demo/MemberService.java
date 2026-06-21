@@ -2,65 +2,67 @@ package com.example.demo;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class MemberService {
-    private final MemberRepository memberRepository;
-    private final ArticleRepository articleRepository;
 
-    public MemberService(MemberRepository memberRepository, ArticleRepository articleRepository) {
-        this.memberRepository = memberRepository;
-        this.articleRepository = articleRepository;
+    private final MemberDao memberDao;
+    private final ArticleDao articleDao;
+
+    public MemberService(MemberDao memberDao, ArticleDao articleDao) {
+        this.memberDao = memberDao;
+        this.articleDao = articleDao;
     }
 
     public List<Member> getAllMembers() {
-        return memberRepository.findAll();
+        return memberDao.findAll();
     }
 
-    public Member getMember(int id) {
-        return memberRepository.findById(id)
+    public Member getMember(Long id) {
+        return memberDao.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
     }
 
+    @Transactional
     public Member createMember(MemberRequest request) {
-        Member member = new Member(
-                memberRepository.nextId(),
-                request.getName(),
-                request.getEmail(),
-                request.getPassword()
-        );
-        return memberRepository.save(member);
-    }
-
-    public Member updateMember(int id, MemberRequest request) {
-        Member oldMember = memberRepository.findById(id)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
-
-        if (memberRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
+        if (memberDao.existsByEmail(request.getEmail())) {
             throw new ApiException(HttpStatus.CONFLICT);
         }
 
-        Member updatedMember = new Member(
-                oldMember.getId(),
-                request.getName(),
-                request.getEmail(),
-                request.getPassword()
-        );
+        Long id = memberDao.insert(request);
 
-        return memberRepository.save(updatedMember);
+        return memberDao.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
     }
 
-    public Member deleteMember(int id) {
-        Member member = memberRepository.findById(id)
+    @Transactional
+    public Member updateMember(Long id, MemberRequest request) {
+        memberDao.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
-        if (articleRepository.existsByAuthorId(id)) {
+        if (memberDao.existsByEmailAndIdNot(request.getEmail(), id)) {
+            throw new ApiException(HttpStatus.CONFLICT);
+        }
+
+        memberDao.update(id, request);
+
+        return memberDao.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
+    }
+
+    @Transactional
+    public Member deleteMember(Long id) {
+        Member member = memberDao.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
+
+        if (articleDao.existsByAuthorId(id)) {
             throw new ApiException(HttpStatus.BAD_REQUEST);
         }
 
-        memberRepository.delete(id);
+        memberDao.deleteById(id);
         return member;
     }
 }

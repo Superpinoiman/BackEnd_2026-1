@@ -2,101 +2,89 @@ package com.example.demo;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class ArticleService {
-    private final ArticleRepository articleRepository;
-    private final MemberRepository memberRepository;
-    private final BoardRepository boardRepository;
 
-    public ArticleService(ArticleRepository articleRepository,
-                          MemberRepository memberRepository,
-                          BoardRepository boardRepository) {
-        this.articleRepository = articleRepository;
-        this.memberRepository = memberRepository;
-        this.boardRepository = boardRepository;
+    private final ArticleDao articleDao;
+    private final MemberDao memberDao;
+    private final BoardDao boardDao;
+
+    public ArticleService(ArticleDao articleDao,
+                          MemberDao memberDao,
+                          BoardDao boardDao) {
+        this.articleDao = articleDao;
+        this.memberDao = memberDao;
+        this.boardDao = boardDao;
     }
 
-    public Article createArticle(ArticleRequest request) {
-        Member member = memberRepository.findById(request.getAuthorId())
+    @Transactional
+    public Article createArticle(ArticleCreateRequest request) {
+        memberDao.findById(request.getAuthorId())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
-        Board board = boardRepository.findById(request.getBoardId())
+        boardDao.findById(request.getBoardId())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
-        int id = articleRepository.nextId();
+        Long id = articleDao.insert(request);
 
-        Article article = new Article(
-                board.getId(),
-                id,
-                member.getId(),
-                request.getTitle(),
-                request.getContent(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-
-        return articleRepository.save(article);
+        return articleDao.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
     }
 
-    public Article getArticle(int id) {
-        return articleRepository.findById(id)
+    public Article getArticle(Long id) {
+        return articleDao.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
     }
 
     public List<Article> getAllArticles() {
-        return articleRepository.findAll();
+        return articleDao.findAll();
     }
 
-    public List<Article> getArticlesByBoardId(int boardId) {
-        boardRepository.findById(boardId)
+    public List<Article> getArticlesByBoardId(Long boardId) {
+        boardDao.findById(boardId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
-        return articleRepository.findByBoardId(boardId);
+        return articleDao.findByBoardId(boardId);
     }
 
-    public Article updateArticle(int id, ArticleRequest request) {
-        Article oldArticle = articleRepository.findById(id)
+    @Transactional
+    public Article updateArticle(Long id, ArticleUpdateRequest request) {
+        articleDao.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
-        Member member = memberRepository.findById(request.getAuthorId())
+        boardDao.findById(request.getBoardId())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
-        Board board = boardRepository.findById(request.getBoardId())
-                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
+        articleDao.update(id, request);
 
-        Article updatedArticle = new Article(
-                board.getId(),
-                oldArticle.getId(),
-                member.getId(),
-                request.getTitle(),
-                request.getContent(),
-                oldArticle.getCreatedTime(),
-                LocalDateTime.now()
-        );
-
-        return articleRepository.save(updatedArticle);
+        return articleDao.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
     }
 
-    public Article deleteArticle(int id) {
-        Article article = articleRepository.findById(id)
+    @Transactional
+    public Article deleteArticle(Long id) {
+        Article article = articleDao.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
-        articleRepository.delete(id);
+        articleDao.deleteById(id);
         return article;
     }
 
-    public List<ViewResponse> getPosts() {
+    public List<ViewResponse> getPosts(Long boardId) {
+        boardDao.findById(boardId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        return articleRepository.findAll().stream()
+        return articleDao.findByBoardId(boardId).stream()
                 .map(article -> {
-                    Member member = memberRepository.findById(article.getAuthorId()).orElse(null);
-                    Board board = boardRepository.findById(article.getBoardId()).orElse(null);
+                    Member member = memberDao.findById(article.getAuthorId()).orElse(null);
+                    Board board = boardDao.findById(article.getBoardId()).orElse(null);
 
                     String authorName = member != null ? member.getName() : "유령 회원";
                     String boardName = board != null ? board.getName() : "유령 게시판";

@@ -1,19 +1,34 @@
 package com.example.demo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 public class Article {
-    private final int boardId;
-    private final int id;
-    private final int authorId;
-    private final String title;
-    private final String content;
-    private final LocalDateTime createdTime;
-    private final LocalDateTime updatedTime;
 
-    public Article(int boardId,
-                   int id,
-                   int authorId,
+    private Long id;
+
+    @JsonProperty("author_id")
+    private Long authorId;
+
+    @JsonProperty("board_id")
+    private Long boardId;
+
+    private String title;
+    private String content;
+
+    @JsonProperty("created_date")
+    private LocalDateTime createdTime;
+
+    @JsonProperty("modified_date")
+    private LocalDateTime updatedTime;
+
+    public Article() {
+    }
+
+    public Article(Long boardId,
+                   Long id,
+                   Long authorId,
                    String title,
                    String content,
                    LocalDateTime createdTime,
@@ -27,15 +42,15 @@ public class Article {
         this.updatedTime = updatedTime;
     }
 
-    public int getBoardId() {
+    public Long getBoardId() {
         return boardId;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public int getAuthorId() {
+    public Long getAuthorId() {
         return authorId;
     }
 
@@ -54,5 +69,32 @@ public class Article {
     public LocalDateTime getUpdatedTime() {
         return updatedTime;
     }
-}
 
+    public void setBoardId(Long boardId) {
+        this.boardId = boardId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+}
