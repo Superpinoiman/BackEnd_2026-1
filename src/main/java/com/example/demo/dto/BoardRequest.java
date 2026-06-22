@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -9,9 +9,5 @@ public class BoardRequest {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }
