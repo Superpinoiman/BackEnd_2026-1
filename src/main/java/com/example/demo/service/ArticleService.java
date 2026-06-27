@@ -24,7 +24,9 @@ public class ArticleService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
 
-    public ArticleService(ArticleRepository articleRepository, MemberRepository memberRepository, BoardRepository boardRepository) {
+    public ArticleService(ArticleRepository articleRepository,
+                          MemberRepository memberRepository,
+                          BoardRepository boardRepository) {
         this.articleRepository = articleRepository;
         this.memberRepository = memberRepository;
         this.boardRepository = boardRepository;
@@ -43,8 +45,8 @@ public class ArticleService {
         }
 
         Article article = new Article(
-                request.getBoardId(),
-                request.getAuthorId(),
+                board,
+                member,
                 request.getTitle(),
                 request.getContent()
         );
@@ -80,7 +82,7 @@ public class ArticleService {
             throw new ApiException(HttpStatus.BAD_REQUEST);
         }
 
-        article.update(request.getBoardId(), request.getTitle(), request.getContent());
+        article.update(board, request.getTitle(), request.getContent());
         return article;
     }
 
