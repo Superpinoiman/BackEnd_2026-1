@@ -32,18 +32,18 @@ public class Article {
     protected Article() {
     }
 
-    public Article(Long boardId, Long authorId,
+    public Article(Board board, Member member,
                    String title, String content) {
-        this.boardId = boardId;
-        this.authorId = authorId;
+        this.board = board;
+        this.member = member;
         this.title = title;
         this.content = content;
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();
     }
 
-    public void update(Long boardId, String title, String content) {
-        this.boardId = boardId;
+    public void update(Board board, String title, String content) {
+        this.board = board;
         this.title = title;
         this.content = content;
         this.modifiedDate = LocalDateTime.now();
@@ -53,12 +53,12 @@ public class Article {
         return id;
     }
 
-    public Long getBoardId() {
-        return boardId;
+    public Board getBoard() {
+        return board;
     }
 
-    public Long getAuthorId() {
-        return authorId;
+    public Member getAuthor() {
+        return member;
     }
 
     public String getTitle() {
