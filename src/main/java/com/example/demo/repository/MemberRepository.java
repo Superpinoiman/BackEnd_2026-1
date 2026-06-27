@@ -1,4 +1,4 @@
-package com.example.demo.dao;
+package com.example.demo.repository;
 
 import com.example.demo.domain.Member;
 import jakarta.persistence.EntityManager;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class MemberDao {
+public class MemberRepository {
 
     @PersistenceContext
     private EntityManager em;
@@ -30,8 +30,6 @@ public class MemberDao {
 
         return result.isEmpty() ? null : result.get(0);
     }
-
-
 
     public List<Member> findAll() {
         return em.createQuery("select m from Member m", Member.class)

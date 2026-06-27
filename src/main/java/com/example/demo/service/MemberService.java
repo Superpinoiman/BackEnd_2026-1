@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.ArticleDao;
-import com.example.demo.dao.MemberDao;
+import com.example.demo.repository.ArticleRepository;
+import com.example.demo.repository.MemberRepository;
 import com.example.demo.domain.Member;
 import com.example.demo.dto.MemberRequest;
 import com.example.demo.exception.ApiException;
@@ -15,27 +15,27 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MemberService {
 
-    private final MemberDao memberDao;
-    private final ArticleDao articleDao;
+    private final MemberRepository memberRepository;
+    private final ArticleRepository articleRepository;
 
-    public MemberService(MemberDao memberDao, ArticleDao articleDao) {
-        this.memberDao = memberDao;
-        this.articleDao = articleDao;
+    public MemberService(MemberRepository memberRepository, ArticleRepository articleRepository) {
+        this.memberRepository = memberRepository;
+        this.articleRepository = articleRepository;
     }
 
     @Transactional
     public Member createMember(MemberRequest request) {
-        Member foundMember = memberDao.findByEmail(request.getEmail());
+        Member foundMember = memberRepository.findByEmail(request.getEmail());
         if (foundMember != null) {
             throw new ApiException(HttpStatus.CONFLICT);
         }
 
         Member member = new Member(request.getName(), request.getEmail(), request.getPassword());
-        return memberDao.save(member);
+        return memberRepository.save(member);
     }
 
     public Member getMember(Long id) {
-        Member member = memberDao.findById(id);
+        Member member = memberRepository.findById(id);
         if (member == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
@@ -43,17 +43,17 @@ public class MemberService {
     }
 
     public List<Member> getMembers() {
-        return memberDao.findAll();
+        return memberRepository.findAll();
     }
 
     @Transactional
     public Member updateMember(Long id, MemberRequest request) {
-        Member member = memberDao.findById(id);
+        Member member = memberRepository.findById(id);
         if (member == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
 
-        Member foundMember = memberDao.findByEmail(request.getEmail());
+        Member foundMember = memberRepository.findByEmail(request.getEmail());
         if (foundMember != null && !foundMember.getId().equals(id)) {
             throw new ApiException(HttpStatus.CONFLICT);
         }
@@ -64,15 +64,15 @@ public class MemberService {
 
     @Transactional
     public void deleteMember(Long id) {
-        Member member = memberDao.findById(id);
+        Member member = memberRepository.findById(id);
         if (member == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
 
-        if (articleDao.existsByAuthorId(id)) {
+        if (articleRepository.existsByAuthorId(id)) {
             throw new ApiException(HttpStatus.BAD_REQUEST);
         }
 
-        memberDao.delete(member);
+        memberRepository.delete(member);
     }
 }

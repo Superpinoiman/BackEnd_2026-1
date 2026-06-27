@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.ArticleDao;
-import com.example.demo.dao.BoardDao;
+import com.example.demo.repository.ArticleRepository;
+import com.example.demo.repository.BoardRepository;
 import com.example.demo.domain.Board;
 import com.example.demo.dto.BoardRequest;
 import com.example.demo.exception.ApiException;
@@ -15,22 +15,22 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class BoardService {
 
-    private final BoardDao boardDao;
-    private final ArticleDao articleDao;
+    private final BoardRepository boardRepository;
+    private final ArticleRepository articleRepository;
 
-    public BoardService(BoardDao boardDao, ArticleDao articleDao) {
-        this.boardDao = boardDao;
-        this.articleDao = articleDao;
+    public BoardService(BoardRepository boardRepository, ArticleRepository articleRepository) {
+        this.boardRepository = boardRepository;
+        this.articleRepository = articleRepository;
     }
 
     @Transactional
     public Board createBoard(BoardRequest request) {
         Board board = new Board(request.getName());
-        return boardDao.save(board);
+        return boardRepository.save(board);
     }
 
     public Board getBoard(Long id) {
-        Board board = boardDao.findById(id);
+        Board board = boardRepository.findById(id);
         if (board == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
@@ -38,12 +38,12 @@ public class BoardService {
     }
 
     public List<Board> getBoards() {
-        return boardDao.findAll();
+        return boardRepository.findAll();
     }
 
     @Transactional
     public Board updateBoard(Long id, BoardRequest request) {
-        Board board = boardDao.findById(id);
+        Board board = boardRepository.findById(id);
         if (board == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
@@ -54,15 +54,15 @@ public class BoardService {
 
     @Transactional
     public void deleteBoard(Long id) {
-        Board board = boardDao.findById(id);
+        Board board = boardRepository.findById(id);
         if (board == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
 
-        if (articleDao.existsByBoardId(id)) {
+        if (articleRepository.existsByBoardId(id)) {
             throw new ApiException(HttpStatus.BAD_REQUEST);
         }
 
-        boardDao.delete(board);
+        boardRepository.delete(board);
     }
 }

@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.ArticleDao;
-import com.example.demo.dao.BoardDao;
-import com.example.demo.dao.MemberDao;
+import com.example.demo.repository.ArticleRepository;
+import com.example.demo.repository.BoardRepository;
+import com.example.demo.repository.MemberRepository;
 import com.example.demo.domain.Article;
 import com.example.demo.domain.Board;
 import com.example.demo.domain.Member;
@@ -20,24 +20,24 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ArticleService {
 
-    private final ArticleDao articleDao;
-    private final MemberDao memberDao;
-    private final BoardDao boardDao;
+    private final ArticleRepository articleRepository;
+    private final MemberRepository memberRepository;
+    private final BoardRepository boardRepository;
 
-    public ArticleService(ArticleDao articleDao, MemberDao memberDao, BoardDao boardDao) {
-        this.articleDao = articleDao;
-        this.memberDao = memberDao;
-        this.boardDao = boardDao;
+    public ArticleService(ArticleRepository articleRepository, MemberRepository memberRepository, BoardRepository boardRepository) {
+        this.articleRepository = articleRepository;
+        this.memberRepository = memberRepository;
+        this.boardRepository = boardRepository;
     }
 
     @Transactional
     public Article createArticle(ArticleCreateRequest request) {
-        Member member = memberDao.findById(request.getAuthorId());
+        Member member = memberRepository.findById(request.getAuthorId());
         if (member == null) {
             throw new ApiException(HttpStatus.BAD_REQUEST);
         }
 
-        Board board = boardDao.findById(request.getBoardId());
+        Board board = boardRepository.findById(request.getBoardId());
         if (board == null) {
             throw new ApiException(HttpStatus.BAD_REQUEST);
         }
@@ -49,11 +49,11 @@ public class ArticleService {
                 request.getContent()
         );
 
-        return articleDao.save(article);
+        return articleRepository.save(article);
     }
 
     public Article getArticle(Long id) {
-        Article article = articleDao.findById(id);
+        Article article = articleRepository.findById(id);
         if (article == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
@@ -61,21 +61,21 @@ public class ArticleService {
     }
 
     public List<Article> getArticles() {
-        return articleDao.findAll();
+        return articleRepository.findAll();
     }
 
     public List<Article> getArticlesByBoardId(Long boardId) {
-        return articleDao.findByBoardId(boardId);
+        return articleRepository.findByBoardId(boardId);
     }
 
     @Transactional
     public Article updateArticle(Long id, ArticleUpdateRequest request) {
-        Article article = articleDao.findById(id);
+        Article article = articleRepository.findById(id);
         if (article == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
 
-        Board board = boardDao.findById(request.getBoardId());
+        Board board = boardRepository.findById(request.getBoardId());
         if (board == null) {
             throw new ApiException(HttpStatus.BAD_REQUEST);
         }
@@ -86,11 +86,11 @@ public class ArticleService {
 
     @Transactional
     public void deleteArticle(Long id) {
-        Article article = articleDao.findById(id);
+        Article article = articleRepository.findById(id);
         if (article == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
 
-        articleDao.delete(article);
+        articleRepository.delete(article);
     }
 }

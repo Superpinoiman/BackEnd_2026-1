@@ -1,4 +1,4 @@
-package com.example.demo.dao;
+package com.example.demo.repository;
 
 import com.example.demo.domain.Article;
 import jakarta.persistence.EntityManager;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ArticleDao {
+public class ArticleRepository {
 
     @PersistenceContext
     private EntityManager em;
