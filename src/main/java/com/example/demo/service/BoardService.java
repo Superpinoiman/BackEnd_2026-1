@@ -1,10 +1,14 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.Article;
+import com.example.demo.domain.Member;
+import com.example.demo.dto.ArticleCreateRequest;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.BoardRepository;
 import com.example.demo.domain.Board;
 import com.example.demo.dto.BoardRequest;
 import com.example.demo.exception.ApiException;
+import com.example.demo.repository.MemberRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +21,14 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final ArticleRepository articleRepository;
+    private final MemberRepository memberRepository;
 
-    public BoardService(BoardRepository boardRepository, ArticleRepository articleRepository) {
+    public BoardService(BoardRepository boardRepository,
+                        ArticleRepository articleRepository,
+                        MemberRepository memberRepository) {
         this.boardRepository = boardRepository;
         this.articleRepository = articleRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Transactional
@@ -64,5 +72,28 @@ public class BoardService {
         }
 
         boardRepository.delete(board);
+    }
+
+    @Transactional
+    public Article createArticle(ArticleCreateRequest request) {
+        Member member = memberRepository.findById(request.getAuthorId());
+        if (member == null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST);
+        }
+
+        Board board = boardRepository.findById(request.getBoardId());
+        if (board == null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST);
+        }
+
+        Article article = new Article(
+                board,
+                member,
+                request.getTitle(),
+                request.getContent()
+        );
+
+        board.addArticle(article);
+        return article;
     }
 }

@@ -21,39 +21,12 @@ import java.util.List;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
-    private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
 
     public ArticleService(ArticleRepository articleRepository,
-                          MemberRepository memberRepository,
                           BoardRepository boardRepository) {
         this.articleRepository = articleRepository;
-        this.memberRepository = memberRepository;
         this.boardRepository = boardRepository;
-    }
-
-    @Transactional
-    public Article createArticle(ArticleCreateRequest request) {
-        Member member = memberRepository.findById(request.getAuthorId());
-        if (member == null) {
-            throw new ApiException(HttpStatus.BAD_REQUEST);
-        }
-
-        Board board = boardRepository.findById(request.getBoardId());
-        if (board == null) {
-            throw new ApiException(HttpStatus.BAD_REQUEST);
-        }
-
-        Article article = new Article(
-                board,
-                member,
-                request.getTitle(),
-                request.getContent()
-        );
-
-        board.addArticle(article);
-        boardRepository.save(board);
-        return article;
     }
 
     public Article getArticle(Long id) {
@@ -61,7 +34,6 @@ public class ArticleService {
         if (article == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
-
         return article;
     }
 

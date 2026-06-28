@@ -108,7 +108,7 @@ public class CrudController {
     @PostMapping("/articles")
     @ResponseBody
     public ResponseEntity<Article> createArticle(@Valid @RequestBody ArticleCreateRequest request) {
-        Article article = articleService.createArticle(request);
+        Article article = boardService.createArticle(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(article);
     }
 
