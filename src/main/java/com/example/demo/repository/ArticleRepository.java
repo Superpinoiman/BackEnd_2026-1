@@ -13,11 +13,6 @@ public class ArticleRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public Article save(Article article) {
-        em.persist(article);
-        return article;
-    }
-
     public Article findById(Long id) {
         return em.find(Article.class, id);
     }
@@ -51,9 +46,5 @@ public class ArticleRepository {
                 .setParameter("boardId", boardId)
                 .getSingleResult();
         return count > 0;
-    }
-
-    public void delete(Article article) {
-        em.remove(article);
     }
 }
