@@ -1,10 +1,11 @@
 package com.example.demo.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.ALL;
 
 @Entity
 @Table(name = "board")
@@ -15,6 +16,9 @@ public class Board {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = ALL)
+    private List<Article> articles = new ArrayList<>();
 
     protected Board() {
     }
