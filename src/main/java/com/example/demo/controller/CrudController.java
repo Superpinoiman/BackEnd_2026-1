@@ -134,7 +134,7 @@ public class CrudController {
     @DeleteMapping("/articles/{id}")
     @ResponseBody
     public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
-        articleService.deleteArticle(id);
+        boardService.deleteArticle(id);
         return ResponseEntity.noContent().build();
     }
 

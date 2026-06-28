@@ -60,14 +60,4 @@ public class ArticleService {
         article.update(board, request.getTitle(), request.getContent());
         return article;
     }
-
-    @Transactional
-    public void deleteArticle(Long id) {
-        Article article = articleRepository.findById(id);
-        if (article == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
-
-        articleRepository.delete(article);
-    }
 }

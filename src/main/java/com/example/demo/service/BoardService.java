@@ -96,4 +96,15 @@ public class BoardService {
         board.addArticle(article);
         return article;
     }
+
+    @Transactional
+    public void deleteArticle(Long id) {
+        Article article = articleRepository.findById(id);
+        if (article == null) {
+            throw new ApiException(HttpStatus.NOT_FOUND);
+        }
+
+        Board board = article.getBoard();
+        board.removeArticle(article);
+    }
 }
