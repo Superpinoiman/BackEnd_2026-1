@@ -59,6 +59,10 @@ public class Article {
         return board;
     }
 
+    public Board setBoard(Board board) {
+        return this.board = board;
+    }
+
     public Member getAuthor() {
         return member;
     }

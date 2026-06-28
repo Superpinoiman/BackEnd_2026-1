@@ -51,7 +51,9 @@ public class ArticleService {
                 request.getContent()
         );
 
-        return articleRepository.save(article);
+        board.addArticle(article);
+        boardRepository.save(board);
+        return article;
     }
 
     public Article getArticle(Long id) {
@@ -59,6 +61,7 @@ public class ArticleService {
         if (article == null) {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
+
         return article;
     }
 

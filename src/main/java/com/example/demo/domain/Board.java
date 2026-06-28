@@ -38,4 +38,14 @@ public class Board {
     public String getName() {
         return name;
     }
+
+    public void addArticle(Article article) {
+        articles.add(article);
+        article.setBoard(this);
+    }
+
+    public void removeArticle(Article article) {
+        articles.remove(article);
+        article.setBoard(null);
+    }
 }
