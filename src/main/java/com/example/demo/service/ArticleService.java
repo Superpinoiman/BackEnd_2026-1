@@ -27,10 +27,8 @@ public class ArticleService {
     }
 
     public Article getArticle(Long id) {
-        Article article = articleRepository.findById(id);
-        if (article == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
         return article;
     }
 
@@ -40,10 +38,8 @@ public class ArticleService {
 
     @Transactional
     public Article updateArticle(Long id, ArticleUpdateRequest request) {
-        Article article = articleRepository.findById(id);
-        if (article == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
         Board board = boardRepository.findById(request.getBoardId())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));

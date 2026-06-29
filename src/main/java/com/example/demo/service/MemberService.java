@@ -63,7 +63,7 @@ public class MemberService {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
-        if (articleRepository.existsByAuthorId(id)) {
+        if (articleRepository.existsByMemberId(id)) {
             throw new ApiException(HttpStatus.BAD_REQUEST);
         }
 

@@ -33,7 +33,7 @@ public class PostService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
-        List<Article> articles = articleRepository.findByBoardId(boardId);
+        List<Article> articles = articleRepository.findByBoardIdOrderByIdDesc(boardId);
         List<PostResponse> result = new ArrayList<>();
 
         for (Article article : articles) {

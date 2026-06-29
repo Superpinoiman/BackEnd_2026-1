@@ -89,10 +89,8 @@ public class BoardService {
 
     @Transactional
     public void deleteArticle(Long id) {
-        Article article = articleRepository.findById(id);
-        if (article == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
         Board board = article.getBoard();
         board.removeArticle(article);

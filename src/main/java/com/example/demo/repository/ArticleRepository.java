@@ -1,50 +1,16 @@
 package com.example.demo.repository;
 
 import com.example.demo.domain.Article;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-@Repository
-public class ArticleRepository {
+public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    @PersistenceContext
-    private EntityManager em;
+    List<Article> findByBoardIdOrderByIdDesc(Long boardId);
 
-    public Article findById(Long id) {
-        return em.find(Article.class, id);
-    }
+    boolean existsByMemberId(Long memberId);
 
-    public List<Article> findAll() {
-        return em.createQuery("select a from Article a order by a.id desc", Article.class)
-                .getResultList();
-    }
+    boolean existsByBoardId(Long boardId);
 
-    public List<Article> findByBoardId(Long boardId) {
-        return em.createQuery(
-                        "select a from Article a where a.board.id = :boardId order by a.id desc",
-                        Article.class)
-                .setParameter("boardId", boardId)
-                .getResultList();
-    }
-
-    public boolean existsByAuthorId(Long authorId) {
-        Long count = em.createQuery(
-                        "select count(a) from Article a where a.author.id = :authorId",
-                        Long.class)
-                .setParameter("authorId", authorId)
-                .getSingleResult();
-        return count > 0;
-    }
-
-    public boolean existsByBoardId(Long boardId) {
-        Long count = em.createQuery(
-                        "select count(a) from Article a where a.board.id = :boardId",
-                        Long.class)
-                .setParameter("boardId", boardId)
-                .getSingleResult();
-        return count > 0;
-    }
 }
