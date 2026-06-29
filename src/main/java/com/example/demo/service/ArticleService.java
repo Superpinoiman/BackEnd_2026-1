@@ -2,11 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.BoardRepository;
-import com.example.demo.repository.MemberRepository;
 import com.example.demo.domain.Article;
 import com.example.demo.domain.Board;
-import com.example.demo.domain.Member;
-import com.example.demo.dto.ArticleCreateRequest;
 import com.example.demo.dto.ArticleUpdateRequest;
 import com.example.demo.exception.ApiException;
 
@@ -39,10 +36,6 @@ public class ArticleService {
 
     public List<Article> getArticles() {
         return articleRepository.findAll();
-    }
-
-    public List<Article> getArticlesByBoardId(Long boardId) {
-        return articleRepository.findByBoardId(boardId);
     }
 
     @Transactional

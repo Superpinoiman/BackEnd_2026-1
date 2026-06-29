@@ -22,7 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping
-public class CrudController {
+public class    CrudController {
 
     private final MemberService memberService;
     private final BoardService boardService;

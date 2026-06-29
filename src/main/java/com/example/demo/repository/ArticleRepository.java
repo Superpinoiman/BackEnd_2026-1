@@ -24,7 +24,7 @@ public class ArticleRepository {
 
     public List<Article> findByBoardId(Long boardId) {
         return em.createQuery(
-                        "select a from Article a where a.boardId = :boardId order by a.id desc",
+                        "select a from Article a where a.board.id = :boardId order by a.id desc",
                         Article.class)
                 .setParameter("boardId", boardId)
                 .getResultList();
@@ -32,7 +32,7 @@ public class ArticleRepository {
 
     public boolean existsByAuthorId(Long authorId) {
         Long count = em.createQuery(
-                        "select count(a) from Article a where a.authorId = :authorId",
+                        "select count(a) from Article a where a.author.id = :authorId",
                         Long.class)
                 .setParameter("authorId", authorId)
                 .getSingleResult();
@@ -41,7 +41,7 @@ public class ArticleRepository {
 
     public boolean existsByBoardId(Long boardId) {
         Long count = em.createQuery(
-                        "select count(a) from Article a where a.boardId = :boardId",
+                        "select count(a) from Article a where a.board.id = :boardId",
                         Long.class)
                 .setParameter("boardId", boardId)
                 .getSingleResult();

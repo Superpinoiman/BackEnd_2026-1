@@ -21,7 +21,9 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
 
-    public PostService(ArticleRepository articleRepository, MemberRepository memberRepository, BoardRepository boardRepository) {
+    public PostService(ArticleRepository articleRepository,
+                       MemberRepository memberRepository,
+                       BoardRepository boardRepository) {
         this.articleRepository = articleRepository;
         this.memberRepository = memberRepository;
         this.boardRepository = boardRepository;
