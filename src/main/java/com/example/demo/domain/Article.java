@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -14,10 +15,12 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "author_id")
     private Member member;
@@ -55,14 +58,16 @@ public class Article {
         return id;
     }
 
+    @JsonIgnore
     public Board getBoard() {
         return board;
     }
 
-    public Board setBoard(Board board) {
-        return this.board = board;
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
+    @JsonIgnore
     public Member getAuthor() {
         return member;
     }
