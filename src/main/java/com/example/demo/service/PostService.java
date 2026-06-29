@@ -30,10 +30,8 @@ public class PostService {
     }
 
     public List<PostResponse> getPosts(Long boardId) {
-        Board board = boardRepository.findById(boardId);
-        if (board == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
         List<Article> articles = articleRepository.findByBoardId(boardId);
         List<PostResponse> result = new ArrayList<>();

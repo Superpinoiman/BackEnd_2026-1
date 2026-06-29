@@ -38,10 +38,8 @@ public class BoardService {
     }
 
     public Board getBoard(Long id) {
-        Board board = boardRepository.findById(id);
-        if (board == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
         return board;
     }
 
@@ -51,10 +49,8 @@ public class BoardService {
 
     @Transactional
     public Board updateBoard(Long id, BoardRequest request) {
-        Board board = boardRepository.findById(id);
-        if (board == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
         board.update(request.getName());
         return board;
@@ -62,10 +58,8 @@ public class BoardService {
 
     @Transactional
     public void deleteBoard(Long id) {
-        Board board = boardRepository.findById(id);
-        if (board == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
         if (articleRepository.existsByBoardId(id)) {
             throw new ApiException(HttpStatus.BAD_REQUEST);
@@ -79,10 +73,8 @@ public class BoardService {
         Member member = memberRepository.findById(request.getAuthorId())
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
-        Board board = boardRepository.findById(request.getBoardId());
-        if (board == null) {
-            throw new ApiException(HttpStatus.BAD_REQUEST);
-        }
+        Board board = boardRepository.findById(request.getBoardId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
         Article article = new Article(
                 board,

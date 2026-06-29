@@ -45,10 +45,8 @@ public class ArticleService {
             throw new ApiException(HttpStatus.NOT_FOUND);
         }
 
-        Board board = boardRepository.findById(request.getBoardId());
-        if (board == null) {
-            throw new ApiException(HttpStatus.BAD_REQUEST);
-        }
+        Board board = boardRepository.findById(request.getBoardId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
         article.update(board, request.getTitle(), request.getContent());
         return article;
