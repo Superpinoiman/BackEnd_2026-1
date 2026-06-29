@@ -35,10 +35,8 @@ public class MemberService {
     }
 
     public Member getMember(Long id) {
-        Member member = memberRepository.findById(id);
-        if (member == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
         return member;
     }
 
@@ -48,10 +46,8 @@ public class MemberService {
 
     @Transactional
     public Member updateMember(Long id, MemberRequest request) {
-        Member member = memberRepository.findById(id);
-        if (member == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
         Member foundMember = memberRepository.findByEmail(request.getEmail());
         if (foundMember != null && !foundMember.getId().equals(id)) {
@@ -64,10 +60,8 @@ public class MemberService {
 
     @Transactional
     public void deleteMember(Long id) {
-        Member member = memberRepository.findById(id);
-        if (member == null) {
-            throw new ApiException(HttpStatus.NOT_FOUND);
-        }
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND));
 
         if (articleRepository.existsByAuthorId(id)) {
             throw new ApiException(HttpStatus.BAD_REQUEST);

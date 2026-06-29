@@ -76,10 +76,8 @@ public class BoardService {
 
     @Transactional
     public Article createArticle(ArticleCreateRequest request) {
-        Member member = memberRepository.findById(request.getAuthorId());
-        if (member == null) {
-            throw new ApiException(HttpStatus.BAD_REQUEST);
-        }
+        Member member = memberRepository.findById(request.getAuthorId())
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST));
 
         Board board = boardRepository.findById(request.getBoardId());
         if (board == null) {

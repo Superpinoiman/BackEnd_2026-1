@@ -39,7 +39,8 @@ public class PostService {
         List<PostResponse> result = new ArrayList<>();
 
         for (Article article : articles) {
-            Member member = memberRepository.findById(article.getAuthor().getId());
+            Member member = memberRepository.findById(article.getAuthor().getId())
+                    .orElseThrow(() -> new RuntimeException("알 수 없음"));
             String authorName = (member != null) ? member.getName() : "알 수 없음";
 
             result.add(new PostResponse(
